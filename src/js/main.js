@@ -37,14 +37,17 @@ const constructFloor = (floorCount, liftCount) => {
 
     newDiv.classList.add(`floors`);
     newDiv.setAttribute("id", `floor_${i}`);
-
-    buttonDiv.appendChild(upButton);
-    // buttonDiv.appendChild(downButton);
+    if (i === 1) {
+      buttonDiv.appendChild(upButton);
+    } else if (i === floorCount) {
+      buttonDiv.appendChild(downButton);
+    } else {
+      buttonDiv.appendChild(upButton);
+      buttonDiv.appendChild(downButton);
+    }
 
     upButton.append((document.createTextNode = `UP`));
-    buttonDiv.appendChild(downButton);
     downButton.append((document.createTextNode = `DOWN`));
-
     newDiv.appendChild(buttonDiv);
     flooring.classList.add("floor-bound");
     newDiv.appendChild(container_floor);
@@ -85,11 +88,7 @@ let nearestLift = {};
 document.addEventListener("click", function (event) {
   const availableLift = Array.from(document.getElementsByClassName("lift"));
   const data = Array.from(document.getElementsByClassName("floors"));
-  data.forEach((item) => {
-    item.childNodes.forEach((content) => {
-      console.log(content[0]);
-    });
-  });
+
   if (event.target.classList.contains("up_button")) {
     const sameLift =
       parseInt(event.target.dataset.floorup) -
@@ -157,7 +156,6 @@ const liftController = (event, selectedFloor, available_lift) => {
       available_lift.classList.remove("in_transit");
     }, final_travel * 2000 + 5000);
 
-    // available_lift.style.transition = `transform ${travelTo * 2}s linear`;
     if (selectedFloor === "1") {
       available_lift.style.transition = `transform ${(travel - 1) * 2}s linear`;
     } else if (final_travel === 0) {
@@ -205,11 +203,10 @@ const liftController = (event, selectedFloor, available_lift) => {
         -1 +
       "px)";
   }
-  console.log(destinationCalculator(floor_oo, floor_up, selectedFloor));
 };
 
 const destinationCalculator = (totalFloors, buttonClicked, floor) => {
-  const x = parseInt(floor) - 1 - parseInt(floor) * 0.1;
+  const adjustment = parseInt(floor) - 1 - parseInt(floor) * 0.1;
   return (
     document
       .getElementsByClassName("floors")
@@ -217,31 +214,6 @@ const destinationCalculator = (totalFloors, buttonClicked, floor) => {
       .querySelectorAll(".floor-bound")
       .item(0).offsetTop +
     parseInt(floor) -
-    x
+    adjustment
   );
-  // 13 -
-  // floor * 0.12
 };
-
-/**
- 1. Check for whether the lift is available at the selected floor or not.
-    For this first check the current location of the lift and check the selected floor, if both are same, do not send in a new lift.
-  
- */
-
-// data.forEach((item) => {
-//   item.childNodes.forEach((content) => {
-//     if (content.classList.contains("lift")) {
-//       console.log(content);
-//       // item.setAttribute("data-floor", `${event.target.dataset.floorup}`);
-//       // item.setAttribute("id", `floor_${event.target.dataset.floorup}`);
-//       // console.log(item);
-//       // console.log(event.target.classList.contains("true"));
-//     }
-//     // else {
-//     //   // event.target.classList.add("false");
-//     //   // console.log(event.target.classList.contains("false"));
-//     //   item.removeAttribute("id");
-//     // }
-//   });
-// });
